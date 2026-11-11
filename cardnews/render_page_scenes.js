@@ -157,24 +157,52 @@ const SCHED_CSS = '#schedule h2{font-size:34px} #schedule .hd{margin-bottom:16px
 
     // 7c 비즈니스 트랙: 간결하게
     await customStill(b, '07c_레클에는 2-track이 있어요_비즈니스 트랙', { W: 600, H: 750,
-      css: '#cs{padding:44px 36px} #cs h2{font-size:34px;font-weight:800;letter-spacing:-.045em;margin:10px 0 14px} #cs .lead{font-size:19px;line-height:1.5;font-weight:800;margin:0 0 4px;letter-spacing:-.03em} #cs .sm{font-size:15px;color:#8a8a90;margin:0 0 26px;font-weight:600} #cs .gh{font-size:14px;font-weight:700;color:#8a8a90;margin:0 0 10px} #cs .chk{margin:0 0 28px;gap:9px} #cs .chk li{font-size:16px;line-height:1.5;color:#111} #cs .chk li::before{top:.68em} #cs .tline{margin:4px 0 0} #cs .tline li{padding:0 0 15px 32px} #cs .tline li:last-child{padding-bottom:0} #cs .tline h4{font-size:17.5px;margin:1px 0 0;letter-spacing:-.03em} #cs .tline .wl{font-size:12.5px} #cs .tline li::after{top:20px;left:5px} #cs .tline li::before{width:12px;height:12px;border-width:2.5px}',
-      html: `<span class="badge new">NEW</span><h2>비즈니스 트랙</h2><p class="lead">5주 안에 내 상품 하나를 만들고,<br>판매를 열어봅니다.</p><p class="sm">소수로 진행해요.</p>
-      <p class="gh">이런 분께 추천해요</p><ul class="chk"><li>내 경험·노하우를 상품(템플릿, 전자책, 컨설팅)으로 만들고 싶은 분</li><li>콘텐츠는 꾸준히 만들고, 이제 판매 흐름을 만들어보고 싶은 분</li><li>5주 동안 매주 만들고, 공개하고, 함께 회고할 수 있는 분</li></ul>
+      css: '#cs{padding:44px 36px} #cs h2{font-size:34px;font-weight:800;letter-spacing:-.045em;margin:10px 0 14px} #cs .lead{font-size:19px;line-height:1.5;font-weight:800;margin:0 0 20px;letter-spacing:-.03em} #cs .ex{font-size:14.5px;font-weight:700;color:#3b6300;background:#e0ffba;border-radius:12px;padding:10px 14px;margin:-10px 0 22px;align-self:flex-start} #cs .sm{font-size:15px;color:#8a8a90;margin:0 0 26px;font-weight:600} #cs .gh{font-size:14px;font-weight:700;color:#8a8a90;margin:0 0 10px} #cs .chk{margin:0 0 22px;gap:8px} #cs .chk li{font-size:16px;line-height:1.5;color:#111} #cs .chk li::before{top:.68em} #cs .tline{margin:4px 0 0} #cs .tline li{padding:0 0 11px 32px} #cs .tline li:last-child{padding-bottom:0} #cs .tline h4{font-size:17.5px;margin:1px 0 0;letter-spacing:-.03em} #cs .tline .wl{font-size:12.5px} #cs .tline li::after{top:20px;left:5px} #cs .tline li::before{width:12px;height:12px;border-width:2.5px}',
+      html: `<span class="badge new">NEW</span><h2>비즈니스 트랙</h2><p class="lead">5주 안에 나만의 상품을 하나 만들어서<br>판매까지 이어봐요.</p>
+      <p class="gh">이런 분께 추천해요</p><ul class="chk"><li>내 경험·노하우를 상품(템플릿, 전자책, 컨설팅)으로 만들고 싶은 분</li><li>콘텐츠는 꾸준히 만들고, 이제 판매 흐름을 만들어보고 싶은 분</li><li>5주 동안 매주 만들고, 공개하고, 함께 회고할 수 있는 분</li></ul><span class="ex">상품 예시) 전자책, 템플릿, 커뮤니티, 컨설팅</span>
       <p class="gh">5주 커리큘럼</p><ol class="tline"><li><span class="wl">1주차</span><h4>OT · 상품 정의서 작성</h4></li><li><span class="wl">2주차</span><h4>상품 초안 구성</h4></li><li><span class="wl">3주차</span><h4>상품 기획 완료 · 판매 준비</h4></li><li><span class="wl">4주차</span><h4>판매 시작</h4></li><li><span class="wl">5주차</span><h4>첫 판매 회고 · 다음 액션 정리</h4></li></ol>` });
   }
 
-  // 8 마지막 장표 (모션): 문구가 차례로 나타나고, 핵심 문구에 형광 밑줄이 그어져요.
-  if (want('last')) await customVideo(b, '08_마지막 장표_모션', { W: 540, H: 675, secs: 10,
-    css: '#cs{align-items:center;text-align:center;padding:40px 36px} #cs .brand{position:absolute;top:34px;left:0;right:0;justify-content:center;font-size:15px} #cs .big{font-size:29px;line-height:1.4;font-weight:800;letter-spacing:-.05em;margin:0 0 30px} #cs .a{display:block;opacity:0} #cs .hl{background:linear-gradient(#e0ffba,#e0ffba) no-repeat 0 92%;background-size:0% 38%;display:inline} #cs .t{font-size:15.5px;line-height:1.75;color:#4a4a52;margin:0 0 22px;font-weight:500} #cs .motto{font-size:11.5px;font-weight:800;letter-spacing:.16em;color:#8a8a90;margin-top:34px}',
-    html: `<span class="brand a" data-s="0.2" style="display:flex"><span class="logo"></span>Layered Club</span>
-    <p class="big"><span class="a" data-s="0.8">우리는 빠른 성장보다</span><span class="a" data-s="1.5"><span class="hl">지속 가능한 꾸준함</span>을 믿어요.</span></p>
-    <p class="t"><span class="a" data-s="3.3">내 이야기를 부담 없이 꺼내고,</span><span class="a" data-s="3.7">그 이야기가 누군가에게 가치가 되고,</span><span class="a" data-s="4.1">기록이 나다운 삶으로 이어지는 걸 지향해요.</span></p>
-    <p class="t"><span class="a" data-s="5.6">혼자였다면 포기했을 순간을 함께 넘으며,</span><span class="a" data-s="6.0">각자의 속도로 다음 레이어를 쌓아가요.</span></p>
-    <p class="motto a" data-s="7.3">MOVE AT YOUR OWN PACE, JUST KEEP GOING!</p>`,
-    anim: ({ t }) => {
+  // 8 마지막 장표 (모션): 글자 단위 등장 + 레이어 카드가 쌓이는 배경 + 형광펜 + 흐르는 모토 띠 + 느린 줌
+  const chars = (txt, s0, step) => Array.from(txt).map((c, i) => c === ' ' ? ' ' : `<span class="c" data-s="${(s0 + i * step).toFixed(2)}">${c}</span>`).join('');
+  const line = (txt, s) => `<span class="m"><span class="ln" data-s="${s}">${txt}</span></span>`;
+  if (want('last')) await customVideo(b, '08_마지막 장표_모션', { W: 540, H: 675, secs: 11,
+    css: '#cs{align-items:center;text-align:center;padding:0 34px;overflow:hidden} #cs .world{position:absolute;inset:0;transform-origin:50% 45%} #cs .lay{position:absolute;left:50%;top:50%;width:420px;height:400px;margin:-215px 0 0 -210px;border-radius:34px;opacity:0} #cs .blob{position:absolute;border-radius:50%;filter:blur(46px);opacity:.75} #cs .fg{position:relative;z-index:2;transform-origin:50% 45%} #cs .brand{position:absolute;top:34px;left:0;right:0;justify-content:center;font-size:15px;z-index:3;display:flex;opacity:0} #cs .big{font-size:31px;line-height:1.38;font-weight:800;letter-spacing:-.05em;margin:0 0 30px} #cs .big .row{display:block;white-space:nowrap} #cs .c{display:inline-block;opacity:0} #cs .hl{background:linear-gradient(#e0ffba,#e0ffba) no-repeat 0 90%;background-size:0% 40%;display:inline} #cs .m{display:block;overflow:hidden;padding:2px 0} #cs .ln{display:block;opacity:0} #cs .t{font-size:15.5px;line-height:1.7;color:#4a4a52;margin:0 0 20px;font-weight:500} #cs .tick{position:absolute;left:-20px;right:-20px;bottom:48px;height:54px;background:#111;color:#fff;transform:rotate(-3deg);overflow:hidden;z-index:3;opacity:0;display:flex;align-items:center} #cs .tick div{white-space:nowrap;font-size:17px;font-weight:800;letter-spacing:.14em;will-change:transform}',
+    html: `<div class="world"><div class="blob" style="width:260px;height:260px;left:-80px;top:-60px;background:#e0ffba"></div><div class="blob" style="width:240px;height:240px;right:-90px;top:200px;background:#ffd9e8"></div><div class="blob" style="width:260px;height:260px;left:-60px;bottom:-40px;background:#d8e8ff"></div>
+      <div class="lay" id="l1" style="background:#d8e8ff"></div><div class="lay" id="l2" style="background:#ffd9e8"></div><div class="lay" id="l3" style="background:#fff;box-shadow:0 18px 50px rgba(0,0,0,.10);border:1.5px solid #ececef"></div></div>
+    <span class="brand" id="br"><span class="logo"></span>Layered Club</span>
+    <div class="fg" id="fg"><p class="big"><span class="row">${chars('우리는 빠른 성장보다', 0.7, 0.05)}</span><span class="row"><span class="hl">${chars('지속 가능한 꾸준함', 1.9, 0.045)}</span>${chars('을 믿어요.', 2.75, 0.05)}</span></p>
+    <p class="t">${line('내 이야기를 부담 없이 꺼내고,', 3.9)}${line('그 이야기가 누군가에게 가치가 되고,', 4.2)}${line('기록이 나다운 삶으로 이어지는 걸 지향해요.', 4.5)}</p>
+    <p class="t">${line('혼자였다면 포기했을 순간을 함께 넘으며,', 5.9)}${line('각자의 속도로 다음 레이어를 쌓아가요.', 6.2)}</p></div>
+    <div class="tick" id="tk"><div id="tkt">${'MOVE AT YOUR OWN PACE, JUST KEEP GOING!  ·  '.repeat(4)}</div></div>`,
+    anim: ({ t, total }) => {
+      const cl = x => Math.max(0, Math.min(1, x));
       const ease = x => 1 - Math.pow(1 - x, 3);
-      document.querySelectorAll('.a').forEach(el => { const k = Math.max(0, Math.min(1, (t - parseFloat(el.dataset.s)) / 0.7)); el.style.opacity = String(ease(k)); el.style.transform = 'translateY(' + ((1 - ease(k)) * 24) + 'px)'; });
-      const k = Math.max(0, Math.min(1, (t - 2.3) / 0.9)); document.querySelector('.hl').style.backgroundSize = (ease(k) * 100) + '% 38%';
+      const back = x => { const c = 1.7; return 1 + (c + 1) * Math.pow(x - 1, 3) + c * Math.pow(x - 1, 2); };
+      const $ = s => document.querySelector(s);
+      const out = cl((t - (total - 0.6)) / 0.5);
+      // 레이어 카드: 하나씩 튀어나와 쌓이고, 이후 천천히 떠다녀요
+      [['#l1', 0.1, -14, -150, 8], ['#l2', 0.35, 9, -80, -7], ['#l3', 0.6, -4, -10, 4]].forEach(([id, s, rot, y, ph], i) => {
+        const k = cl((t - s) / 0.9), e = back(k);
+        const fl = Math.sin(t * 0.9 + ph) * 8, dr = Math.cos(t * 0.6 + ph) * 6;
+        const el = $(id); el.style.opacity = String(cl(k * 2) * (0.8 - i * 0.05) * (1 - out));
+        el.style.transform = 'translate(' + (dr + (1 - e) * (i % 2 ? 160 : -160)) + 'px,' + (y * 0.2 + fl + (1 - e) * 120) + 'px) rotate(' + (rot * e + Math.sin(t * 0.5 + ph) * 1.5) + 'deg) scale(' + (0.6 + 0.4 * e) + ')';
+      });
+      document.querySelectorAll('.blob').forEach((el, i) => { el.style.transform = 'translate(' + Math.sin(t * 0.7 + i * 2) * 30 + 'px,' + Math.cos(t * 0.6 + i * 2) * 30 + 'px)'; });
+      // 브랜드
+      $('#br').style.opacity = String(ease(cl((t - 0.2) / 0.6)) * (1 - out));
+      // 글자 단위: 아래서 올라오며 블러가 풀리고 살짝 튕겨요
+      document.querySelectorAll('.c').forEach(el => { const k = cl((t - parseFloat(el.dataset.s)) / 0.55), e = back(k); el.style.opacity = String(cl(k * 2) * (1 - out)); el.style.transform = 'translateY(' + ((1 - e) * 40) + 'px) scale(' + (0.8 + 0.2 * e) + ')'; el.style.filter = 'blur(' + ((1 - ease(k)) * 7) + 'px)'; });
+      // 형광펜 쓸기
+      $('.hl').style.backgroundSize = (ease(cl((t - 3.05) / 0.8)) * 100) + '% 40%';
+      // 문단: 마스크 안에서 올라와요
+      document.querySelectorAll('.ln').forEach(el => { const k = cl((t - parseFloat(el.dataset.s)) / 0.8), e = ease(k); el.style.opacity = String(cl(k * 3) * (1 - out)); el.style.transform = 'translateY(' + ((1 - e) * 110) + '%)'; });
+      // 모토 띠: 아래서 올라와 오른쪽→왼쪽으로 계속 흘러요
+      const tk = ease(cl((t - 7.5) / 0.8)); const T = $('#tk'); T.style.opacity = String(tk * (1 - out)); T.style.transform = 'rotate(-3deg) translateY(' + ((1 - tk) * 90) + 'px)';
+      $('#tkt').style.transform = 'translateX(' + (-(Math.max(0, t - 7.5)) * 110) + 'px)';
+      // 전체 카메라: 아주 천천히 다가가요
+      $('#fg').style.transform = 'scale(' + (1 + t / total * 0.05) + ')';
+      $('.world').style.transform = 'scale(' + (1 + t / total * 0.08) + ')';
     } });
 
   await b.close();
