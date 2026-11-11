@@ -157,18 +157,6 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
 .lbox img{max-width:100%;max-height:100%;object-fit:contain;border-radius:8px;background:#fff}
 .lbx{position:absolute;top:max(12px,env(safe-area-inset-top,0px));right:max(12px,env(safe-area-inset-right,0px));width:42px;height:42px;border-radius:50%;border:0;background:#fff;color:#111;font-size:22px;line-height:1;cursor:pointer}
 
-/* 독서모임 */
-.bk{display:grid;gap:14px;grid-template-columns:1fr}
-.bcover{background:var(--c-book);color:var(--ink);border-radius:18px;padding:28px 26px;min-height:240px;display:flex;flex-direction:column;justify-content:space-between;gap:24px}
-.bcover b{font-size:clamp(24px,5vw,32px);font-weight:800;line-height:1.3;letter-spacing:-.04em}
-.bcover span{font-size:13px;font-weight:700;opacity:.75}
-.bright{display:flex;flex-direction:column;gap:12px;min-width:0}
-.bp{font-size:16px;color:var(--g2)}
-.bd{list-style:none;margin:6px 0 0;padding:0;display:grid;gap:8px}
-.bd li{display:grid;grid-template-columns:44px auto 1fr;gap:10px;align-items:baseline;background:var(--soft);border-radius:12px;padding:12px 16px;font-size:15px}
-.bd li span{font-weight:800;color:var(--mute);font-size:13px}
-.bd li em{font-style:normal;color:var(--g2);text-align:right}
-
 /* 후기 */
 .masonry{columns:1;column-gap:14px}
 .rv{break-inside:avoid;background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:18px;margin:0 0 14px}
@@ -354,7 +342,6 @@ footer{background:var(--soft);padding-block:48px max(48px,env(safe-area-inset-bo
   .rec{grid-template-columns:repeat(2,minmax(0,1fr))}
   .acts{grid-template-columns:repeat(3,minmax(0,1fr))}
   .act.span2{grid-column:span 2}
-  .bk{grid-template-columns:5fr 7fr}
   .bpts{grid-template-columns:repeat(3,minmax(0,1fr))}
   .bshots{grid-template-columns:repeat(3,minmax(0,1fr))}
   .masonry{columns:3}
@@ -489,24 +476,6 @@ footer{background:var(--soft);padding-block:48px max(48px,env(safe-area-inset-bo
       </div>
     </div>
     <p class="fine">슬랙에서 실제로 오간 짝꿍 피드백이에요. 눌러서 크게 볼 수 있어요.</p>
-  </section>
-
-  <!-- 독서모임 -->
-  <section class="s wrap" id="book">
-    <div class="hd"><h2>독서모임</h2></div>
-    <div class="bk">
-      <div class="bcover"><span>4기 함께 읽는 책</span><b>시대예보:<br>수고인류의 시간</b><span>2~4주차 · 총 3주</span></div>
-      <div class="bright">
-        <p class="bp">완독보다 생각을 나누고, 내 삶과 콘텐츠에 적용하는 데 집중해요.</p>
-        
-        <ul class="bd">
-          <li><span>1차</span><b>11/28(토)</b></li>
-          <li><span>2차</span><b>12/5(토)</b></li>
-          <li><span>3차</span><b>12/12(토)</b></li>
-        </ul>
-        
-      </div>
-    </div>
   </section>
 
   <!-- 후기 -->
