@@ -1038,5 +1038,18 @@ Array.prototype.forEach.call(document.querySelectorAll("[data-gt]"), function(b)
 route();
 </script>
 
+<script>
+(function(){
+  function inField(t){ return t && /^(input|textarea|select)$/i.test(t.tagName); }
+  document.addEventListener("contextmenu", function(e){ if(!inField(e.target)) e.preventDefault(); });
+  document.addEventListener("keydown", function(e){
+    var k = (e.key || "").toLowerCase(), c = e.ctrlKey || e.metaKey;
+    if(e.key === "F12" ||
+       (c && (k === "u" || k === "s")) ||
+       (c && e.shiftKey && (k === "i" || k === "j" || k === "c")) ||
+       (e.metaKey && e.altKey && (k === "i" || k === "j" || k === "u" || k === "c"))) e.preventDefault();
+  });
+})();
+</script>
 </body>
 </html>
