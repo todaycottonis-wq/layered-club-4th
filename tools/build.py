@@ -14,10 +14,11 @@ doc = ('<!doctype html>\n<html lang="ko">\n<head>\n<meta charset="utf-8">\n'
  f'<link rel="icon" href="{icon}">\n'
  '<style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);color-scheme:light}'
  'body{margin:0;font:14px system-ui,sans-serif}img{max-width:100%}[hidden]{display:none!important}</style>\n'
- + head_extra + '</head>\n<body>\n' + body + '\n</body>\n</html>\n')
+ + '<link rel="stylesheet" href="fonts/pretendard/pretendardvariable-dynamic-subset.css">\n' + head_extra + '</head>\n<body>\n' + body + '\n</body>\n</html>\n')
 out = os.path.join(root, 'public')
 shutil.rmtree(out, ignore_errors=True)
 os.makedirs(out)
 open(os.path.join(out, 'index.html'), 'w', encoding='utf-8').write(doc)
 shutil.copytree(os.path.join(root, 'img'), os.path.join(out, 'img'))
+shutil.copytree(os.path.join(root, 'fonts'), os.path.join(out, 'fonts'))
 print('built', out, os.path.getsize(os.path.join(out, 'index.html')))
