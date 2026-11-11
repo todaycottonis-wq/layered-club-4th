@@ -651,7 +651,7 @@ footer{background:var(--soft);padding-block:48px max(48px,env(safe-area-inset-bo
         <li><a href="https://www.instagram.com/cotton.224/" target="_blank" rel="noopener">인스타그램 @cotton.224</a></li>
         <li><a href="#apply">4기 신청하기</a></li></ul></div>
     </div>
-    <div class="copy"><span>MOVE AT YOUR OWN PACE, JUST KEEP GOING!</span><span>© Layered Club</span></div>
+    <div class="copy"><span>MOVE AT YOUR OWN PACE, JUST KEEP GOING!</span><span>© Layered Club · 방문 통계를 익명으로 기록해요</span></div>
   </div>
 </footer>
 </div>
@@ -783,6 +783,33 @@ var toastEl = document.getElementById("toast");
 function toast(msg){ toastEl.textContent = msg; toastEl.classList.add("on"); setTimeout(function(){ toastEl.classList.remove("on"); }, 1800); }
 function won(n){ return n.toLocaleString("ko-KR") + "원"; }
 
+/* ---------- 방문·이탈 기록 (익명) ----------
+   이름·연락처 같은 개인정보는 보내지 않아요. 임의의 방문자 ID와 "어디까지 갔는지"만 기록해요.
+   endpoint가 없거나 로컬 주소에서는 꺼져 있어요. 주소 끝에 ?notrack 을 붙이면 내 방문은 기록하지 않아요. */
+var TRK = (function(){
+  var ep = CONFIG.endpoint, q = [], seen = {};
+  var on = !!ep && ep.indexOf("/formResponse") < 0 && !/^(localhost|127\.|0\.0\.0\.0)/.test(location.hostname) && !/[?&]notrack/.test(location.search);
+  function rid(){ return Math.random().toString(36).slice(2, 10) + Date.now().toString(36).slice(-4); }
+  var vid = "", sid = "";
+  try { vid = localStorage.getItem("lc_vid") || ""; if(!vid){ vid = rid(); localStorage.setItem("lc_vid", vid); } } catch(e){ vid = "x" + rid(); }
+  try { sid = sessionStorage.getItem("lc_sid") || ""; if(!sid){ sid = rid(); sessionStorage.setItem("lc_sid", sid); } } catch(e){ sid = "x" + rid(); }
+  var sp = new URLSearchParams(location.search), refHost = "";
+  try { refHost = document.referrer ? new URL(document.referrer).hostname : ""; } catch(e){}
+  var meta = { device: /Mobi|Android|iPhone/i.test(navigator.userAgent) ? "mobile" : "desktop", ref: refHost, src: sp.get("utm_source") || sp.get("src") || "", w: window.innerWidth };
+  function flush(){
+    if(!on || !q.length) return;
+    var batch = q.splice(0, q.length);
+    try { fetch(ep, { method: "POST", mode: "no-cors", keepalive: true, body: JSON.stringify({ type: "events", vid: vid, sid: sid, meta: meta, events: batch }) }); } catch(e){}
+  }
+  function ev(name, detail){ if(!on) return; q.push({ t: Date.now(), e: name, d: detail == null ? "" : String(detail) }); if(q.length >= 10) flush(); }
+  function once(name, detail){ if(seen[name]) return; seen[name] = 1; ev(name, detail); }
+  setInterval(flush, 5000);
+  document.addEventListener("visibilitychange", function(){ if(document.visibilityState === "hidden") flush(); });
+  window.addEventListener("pagehide", flush);
+  return { ev: ev, once: once, flush: flush, on: on };
+})();
+TRK.once("pageview");
+
 /* ---------- 캘린더 ---------- */
 var KINDS = [
   ["ot","OT"], ["chat","1:1 레클챗 기간","bar"], ["grp","단체 레클챗 기간","bar"], ["jail","감금방"], ["book","독서모임"], ["work","모각작"], ["meet","밋업"], ["biz","비즈니스 트랙"], ["rec","모집"]
@@ -902,16 +929,21 @@ function route(){
     return;
   }
   prepare(name);
+  if(name === "form") TRK.once("form_view");
   landing.hidden = true; flow.hidden = false;
   Object.keys(SCR).forEach(function(k){ document.getElementById(SCR[k]).hidden = k !== name; });
   window.scrollTo(0, 0);
 }
 window.addEventListener("hashchange", route);
 
-document.getElementById("goNew").addEventListener("click", function(){ mode = "new"; gen = ""; tt = ""; submitted = false; go("track"); });
-document.getElementById("goOld").addEventListener("click", function(){ mode = "old"; gen = ""; tt = ""; submitted = false; go("gen"); });
-Array.prototype.forEach.call(document.querySelectorAll("[data-gen]"), function(b){ b.addEventListener("click", function(){ gen = b.getAttribute("data-gen"); tt = ""; go("track"); }); });
-Array.prototype.forEach.call(document.querySelectorAll("[data-tt]"), function(b){ b.addEventListener("click", function(){ tt = b.getAttribute("data-tt"); go("form"); }); });
+document.getElementById("goNew").addEventListener("click", function(){ mode = "new"; gen = ""; tt = ""; submitted = false; TRK.ev("apply_start", "new"); go("track"); });
+document.getElementById("goOld").addEventListener("click", function(){ mode = "old"; gen = ""; tt = ""; submitted = false; TRK.ev("apply_start", "old"); go("gen"); });
+Array.prototype.forEach.call(document.querySelectorAll("[data-gen]"), function(b){ b.addEventListener("click", function(){ gen = b.getAttribute("data-gen"); tt = ""; TRK.ev("gen_select", gen); go("track"); }); });
+Array.prototype.forEach.call(document.querySelectorAll("[data-tt]"), function(b){ b.addEventListener("click", function(){ tt = b.getAttribute("data-tt"); TRK.ev("track_select", mode + ":" + tt); go("form"); }); });
+document.addEventListener("click", function(e){
+  var a = e.target.closest && e.target.closest('a[href="#apply"]');
+  if(a) TRK.ev("cta_click", a.closest("nav") ? "nav" : a.closest("header") ? "hero" : a.closest("footer") ? "footer" : "other");
+});
 document.getElementById("back").addEventListener("click", function(){
   var h = (location.hash || "").replace("#apply-", "");
   if(h === "form") go("track");
@@ -923,6 +955,7 @@ document.getElementById("toHome").addEventListener("click", function(){ mode = "
 
 document.getElementById("copy").addEventListener("click", function(){
   var no = document.getElementById("acctNo").textContent;
+  TRK.once("copy_account");
   var ok = function(){ toast("계좌번호를 복사했어요"); };
   var fallback = function(){
     var r = document.createRange(); r.selectNodeContents(document.getElementById("acctNo"));
@@ -935,10 +968,11 @@ function setErr(name, msg){
   var q = form.querySelector('.q2[data-name="'+name+'"]'); if(!q) return;
   q.classList.toggle("bad", !!msg); var e = q.querySelector(".err"); if(e) e.textContent = msg || "";
 }
-form.addEventListener("input", function(ev){ var q = ev.target.closest(".q2"); if(q){ q.classList.remove("bad"); var e = q.querySelector(".err"); if(e) e.textContent = ""; } });
+form.addEventListener("input", function(ev){ TRK.once("form_start"); var q = ev.target.closest(".q2"); if(q){ q.classList.remove("bad"); var e = q.querySelector(".err"); if(e) e.textContent = ""; } });
 
 form.addEventListener("submit", function(ev){
   ev.preventDefault();
+  TRK.ev("submit_try");
   var errors = {}, p = currentPrice();
   if(tt === "일반" && !radio("level")) errors.level = "비기너와 빌더 중 하나를 선택해 주세요.";
   if(!field("name")) errors.name = "성함을 입력해 주세요.";
@@ -954,6 +988,7 @@ form.addEventListener("submit", function(ev){
   ["level","name","email","tel","why","goal","book","paid","agree"].forEach(function(n){ setErr(n, errors[n]); });
   var first = Object.keys(errors)[0];
   if(first || !p){
+    TRK.ev("submit_invalid", first || "price");
     var q = form.querySelector('.q2[data-name="'+(first || "name")+'"]'); if(q){ q.scrollIntoView({behavior:"smooth",block:"center"}); var f = q.querySelector("input,textarea"); if(f) f.focus({preventScroll:true}); }
     return;
   }
@@ -968,6 +1003,7 @@ form.addEventListener("submit", function(ev){
   var btn = document.getElementById("submit"); btn.disabled = true; btn.textContent = "제출 중...";
   var finish = function(sent){
     submitted = true;
+    TRK.ev("submit_success", mode + ":" + tt); TRK.flush();
     document.getElementById("previewNote").hidden = sent;
     btn.disabled = false; btn.textContent = "신청서 제출하기";
     go("done");
@@ -1019,6 +1055,27 @@ Array.prototype.forEach.call(document.querySelectorAll("[data-gt]"), function(b)
   Array.prototype.forEach.call(document.querySelectorAll(".bshot"), function(b){ b.addEventListener("click", function(){ img.src = b.getAttribute("data-src"); lb.hidden = false; }); });
   lb.addEventListener("click", function(e){ if(e.target !== img) close(); });
   document.addEventListener("keydown", function(e){ if(e.key === "Escape" && !lb.hidden) close(); });
+})();
+
+/* 어디까지 읽었는지(스크롤 깊이, 섹션 도달)와 입금 안내 도달을 기록해요. */
+(function(){
+  var marks = [25, 50, 75, 100], ticking = false;
+  function check(){
+    ticking = false;
+    if(landing.hidden) return;
+    var h = document.documentElement.scrollHeight - window.innerHeight;
+    if(h <= 0) return;
+    var pct = Math.round(window.scrollY / h * 100);
+    marks.forEach(function(m){ if(pct >= m - 2) TRK.once("scroll_" + m); });
+  }
+  window.addEventListener("scroll", function(){ if(!ticking){ ticking = true; requestAnimationFrame(check); } }, { passive: true });
+  if("IntersectionObserver" in window){
+    var io = new IntersectionObserver(function(es){
+      es.forEach(function(e){ if(e.isIntersecting){ TRK.once(e.target.id === "payBox" ? "pay_view" : "section_" + e.target.id); io.unobserve(e.target); } });
+    }, { threshold: .4 });
+    ["fit","people","rec","program","buddy","reviews","past","schedule","tracks","apply","last"].forEach(function(id){ var el = document.getElementById(id); if(el) io.observe(el); });
+    var pay = document.querySelector(".pay"); if(pay){ pay.id = "payBox"; io.observe(pay); }
+  }
 })();
 
 route();

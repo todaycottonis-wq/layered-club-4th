@@ -1,0 +1,262 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow">
+<title>Layered Club 관리</title>
+<link rel="stylesheet" href="/fonts/pretendard/pretendardvariable-dynamic-subset.css">
+<style>
+/* Layout: 상단 바(기간·새로고침) → 핵심 지표 → 일별 추이 → 퍼널과 이탈 → 선택 분포·읽은 위치·유입 → 신청 목록 */
+:root{
+  --bg:#f6f6f7; --panel:#fff; --line:#e8e8ea; --ink:#111; --g2:#4a4a52; --mute:#8a8a90; --acc:#111; --onacc:#fff;
+  --soft:#f1f1f3; --bar:#111; --bar2:#d9d9de; --ok:#2e7d32; --warn:#c2410c; --lime:#e0ffba; --limeink:#3b6300;
+  --font:'Pretendard Variable',Pretendard,system-ui,-apple-system,'Noto Sans KR',sans-serif;
+}
+@media (prefers-color-scheme: dark){:root{
+  --bg:#0f0f11; --panel:#1a1a1d; --line:#2c2c31; --ink:#f4f4f5; --g2:#c2c2c8; --mute:#8d8d95; --acc:#f4f4f5; --onacc:#111;
+  --soft:#222226; --bar:#f4f4f5; --bar2:#3a3a40; --ok:#7ccf84; --warn:#ff9a6e; --lime:#26331a; --limeink:#c9ef8f; color-scheme:dark}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--font);font-size:15px;line-height:1.6;letter-spacing:-.01em;-webkit-font-smoothing:antialiased;word-break:keep-all}
+button,input,select{font:inherit;color:inherit}
+h1,h2,h3{margin:0;letter-spacing:-.03em}
+.wrap{max-width:1120px;margin:0 auto;padding:0 max(16px,env(safe-area-inset-left,0px)) 80px}
+.btn{display:inline-flex;align-items:center;justify-content:center;height:38px;padding:0 16px;border-radius:10px;border:1px solid var(--acc);background:var(--acc);color:var(--onacc);font-weight:700;font-size:14px;cursor:pointer;white-space:nowrap}
+.btn.ghost{background:var(--panel);color:var(--ink);border-color:var(--line)}
+.btn.sm{height:32px;padding:0 12px;font-size:13px}
+.top{position:sticky;top:0;z-index:10;background:color-mix(in srgb,var(--bg) 92%,transparent);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+.top .wrap{display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding-bottom:0;height:auto;min-height:60px}
+.top h1{font-size:18px;margin-right:auto}
+.top small{color:var(--mute);font-size:12.5px}
+select{height:38px;border:1px solid var(--line);border-radius:10px;background:var(--panel);padding:0 10px}
+.login{max-width:380px;margin:18vh auto 0;background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:28px}
+.login h2{font-size:20px;margin-bottom:6px}
+.login p{color:var(--g2);font-size:14px;margin:0 0 16px}
+.login input{width:100%;height:46px;border:1px solid var(--line);border-radius:12px;padding:0 14px;background:var(--bg);margin-bottom:10px}
+.err{color:var(--warn);font-size:13.5px;min-height:20px;margin:6px 0 0}
+.sec{margin-top:28px}
+.sec>h2{font-size:17px;margin-bottom:12px}
+.sec>h2 small{font-size:12.5px;font-weight:500;color:var(--mute);margin-left:8px}
+.kpis{display:grid;gap:10px;grid-template-columns:repeat(2,minmax(0,1fr))}
+.kpi{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px 18px;min-width:0}
+.kpi span{display:block;font-size:12.5px;color:var(--mute);font-weight:600}
+.kpi b{display:block;font-size:28px;letter-spacing:-.04em;font-variant-numeric:tabular-nums;line-height:1.25}
+.kpi i{display:block;font-style:normal;font-size:12px;color:var(--g2)}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:18px 20px;min-width:0}
+.grid2{display:grid;gap:12px;grid-template-columns:1fr}
+.grid3{display:grid;gap:12px;grid-template-columns:1fr}
+.rows{display:grid;gap:12px}
+.row{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:4px 12px;align-items:center;font-size:14px}
+.row .lb{min-width:0}
+.row .nv{font-weight:800;font-variant-numeric:tabular-nums;text-align:right}
+.row .nv small{font-weight:500;color:var(--mute);margin-left:6px}
+.row .tr{grid-column:1/-1;height:9px;border-radius:99px;background:var(--soft);overflow:hidden}
+.row .tr i{display:block;height:100%;background:var(--bar);border-radius:99px;min-width:2px}
+.row .tr i.w{background:var(--warn)}
+.step{font-size:12px;color:var(--mute);grid-column:1/-1;margin-top:-2px}
+.step b{color:var(--warn)}
+.note{font-size:13px;color:var(--mute);margin:10px 0 0}
+.hl{background:var(--lime);color:var(--limeink);border-radius:12px;padding:12px 14px;font-weight:600;font-size:14px;margin-bottom:14px}
+.chart svg{display:block;width:100%;height:auto}
+.chart text{fill:var(--mute);font-size:10px}
+.legend{display:flex;gap:14px;font-size:12.5px;color:var(--g2);margin-bottom:8px}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:5px;vertical-align:-1px}
+.tools{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:12px}
+.tools input[type=search]{flex:1;min-width:160px;height:38px;border:1px solid var(--line);border-radius:10px;padding:0 12px;background:var(--panel)}
+.tools label{font-size:13.5px;color:var(--g2);display:inline-flex;gap:6px;align-items:center}
+.tbl{overflow-x:auto;border:1px solid var(--line);border-radius:14px;background:var(--panel)}
+table{border-collapse:collapse;width:100%;min-width:760px;font-size:13.5px}
+th,td{text-align:left;padding:10px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+th{background:var(--soft);font-size:12.5px;color:var(--g2);white-space:nowrap}
+tr.d td{background:var(--soft);color:var(--g2);font-size:13px;line-height:1.7}
+tr.m{cursor:pointer}
+tr.m:hover td{background:var(--soft)}
+.pill{display:inline-block;font-size:12px;font-weight:700;padding:1px 9px;border-radius:99px;background:var(--soft);color:var(--g2)}
+.pill.ok{background:var(--lime);color:var(--limeink)}
+.pill.no{background:#ffe9d9;color:var(--warn)}
+td a{color:inherit}
+.empty{color:var(--mute);padding:18px;text-align:center}
+@media (min-width:760px){
+  .kpis{grid-template-columns:repeat(6,minmax(0,1fr))}
+  .grid2{grid-template-columns:1fr 1fr}
+  .grid3{grid-template-columns:repeat(3,minmax(0,1fr))}
+}
+</style>
+</head>
+<body>
+<div id="login" class="login" hidden>
+  <h2>Layered Club 관리</h2>
+  <p>관리자 비밀번호를 입력해 주세요.</p>
+  <form id="lf"><input id="pw" type="password" autocomplete="current-password" placeholder="비밀번호" aria-label="관리자 비밀번호"><button class="btn" style="width:100%;height:46px" type="submit">들어가기</button></form>
+  <p class="err" id="lerr" role="alert"></p>
+</div>
+
+<div id="app" hidden>
+  <div class="top"><div class="wrap">
+    <h1>Layered Club 4기 관리</h1>
+    <small id="gen"></small>
+    <select id="days" aria-label="기간"><option value="7">최근 7일</option><option value="14">최근 14일</option><option value="30" selected>최근 30일</option><option value="90">최근 90일</option></select>
+    <button class="btn ghost" id="refresh" type="button">새로고침</button>
+    <button class="btn ghost" id="logout" type="button">나가기</button>
+  </div></div>
+  <div class="wrap" id="body"><p class="empty">불러오는 중…</p></div>
+</div>
+
+<script>
+var EP = "__ENDPOINT__";
+var KEY_STORE = "lc_admin_key";
+var key = "", data = null, openRow = -1;
+
+function $(id){ return document.getElementById(id); }
+function esc(s){ return String(s == null ? "" : s).replace(/[&<>"']/g, function(c){ return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]; }); }
+function pct(a, b){ return b ? Math.round(a / b * 1000) / 10 : 0; }
+function num(n){ return Number(n || 0).toLocaleString("ko-KR"); }
+
+function getKey(){ try { return sessionStorage.getItem(KEY_STORE) || ""; } catch(e){ return ""; } }
+function setKey(k){ try { if(k) sessionStorage.setItem(KEY_STORE, k); else sessionStorage.removeItem(KEY_STORE); } catch(e){} }
+
+function showLogin(msg){ $("app").hidden = true; $("login").hidden = false; $("lerr").textContent = msg || ""; $("pw").focus(); }
+function showApp(){ $("login").hidden = true; $("app").hidden = false; }
+
+function load(){
+  if(!EP || EP.indexOf("__ENDPOINT") === 0){ showLogin("신청 접수 주소가 설정되지 않았어요."); return Promise.resolve(); }
+  $("body").innerHTML = '<p class="empty">불러오는 중…</p>';
+  var url = EP + "?action=stats&days=" + encodeURIComponent($("days").value) + "&key=" + encodeURIComponent(key);
+  return fetch(url).then(function(r){ return r.json(); }).then(function(j){
+    if(!j || !j.ok){ setKey(""); key = ""; showLogin(j && j.error === "forbidden" ? "비밀번호가 맞지 않아요." : "불러오지 못했어요."); return; }
+    data = j; setKey(key); showApp(); render();
+  }).catch(function(){ showLogin("불러오지 못했어요. 잠시 후 다시 시도해 주세요. (Apps Script를 새 버전으로 배포했는지 확인해 주세요)"); });
+}
+
+function bars(items, max, cls){
+  return items.map(function(it){
+    return '<div class="row"><span class="lb">' + esc(it.label) + '</span><span class="nv">' + num(it.n) + (it.sub ? '<small>' + it.sub + '</small>' : '') + '</span><span class="tr"><i class="' + (cls || "") + '" style="width:' + Math.max(0, Math.min(100, max ? it.n / max * 100 : 0)) + '%"></i></span></div>';
+  }).join("");
+}
+
+function dailyChart(daily){
+  var W = 640, H = 170, pl = 28, pb = 22, pt = 8, n = daily.length;
+  var mx = Math.max.apply(null, daily.map(function(d){ return d.pv; }).concat([1]));
+  var bw = (W - pl) / n, out = "";
+  [0, .5, 1].forEach(function(t){
+    var y = pt + (H - pb - pt) * (1 - t);
+    out += '<line x1="' + pl + '" x2="' + W + '" y1="' + y + '" y2="' + y + '" stroke="currentColor" stroke-opacity=".12"/><text x="0" y="' + (y + 3) + '">' + Math.round(mx * t) + '</text>';
+  });
+  daily.forEach(function(d, i){
+    var x = pl + i * bw + bw * .12, w = bw * .76;
+    var hp = (H - pb - pt) * d.pv / mx, hu = (H - pb - pt) * d.uv / mx;
+    out += '<rect x="' + x + '" y="' + (H - pb - hp) + '" width="' + w + '" height="' + Math.max(hp, d.pv ? 1 : 0) + '" rx="2" fill="var(--bar2)"><title>' + d.d + ' 페이지뷰 ' + d.pv + '</title></rect>';
+    out += '<rect x="' + x + '" y="' + (H - pb - hu) + '" width="' + w + '" height="' + Math.max(hu, d.uv ? 1 : 0) + '" rx="2" fill="var(--bar)"><title>' + d.d + ' 방문자 ' + d.uv + '</title></rect>';
+    if(n <= 14 || i % Math.ceil(n / 10) === 0) out += '<text x="' + (x + w / 2) + '" y="' + (H - 6) + '" text-anchor="middle">' + d.d.slice(5) + '</text>';
+  });
+  return '<svg viewBox="0 0 ' + W + ' ' + H + '" role="img" aria-label="일별 방문자와 페이지뷰">' + out + '</svg>';
+}
+
+function csv(rows){
+  var head = ["접수시각","구분","기수","트랙","참가비","성함/닉네임","이메일","연락처","계정 링크","신청 이유","얻어가고 싶은 것","나이","MBTI","독서모임","입금 완료 체크","입금 확인"];
+  var q = function(v){ return '"' + String(v == null ? "" : v).replace(/"/g, '""') + '"'; };
+  return "﻿" + [head.map(q).join(",")].concat(rows.map(function(r){
+    return [r.ts, r.type, r.gen, r.track, r.price, r.name, r.email, "'" + r.tel, r.link, r.why, r.goal, r.age, r.mbti, r.book, r.paidCheck, r.confirmed ? "O" : ""].map(q).join(",");
+  })).join("\n");
+}
+
+function render(){
+  var d = data, t = d.totals, f = d.funnel, a = d.applications;
+  $("gen").textContent = "갱신 " + d.generatedAt;
+  var visit = f[0].n, applied = f[f.length - 1].n, started = f[2].n;
+  var h = "";
+
+  h += '<div class="sec"><div class="kpis">' +
+    kpi("방문자", num(t.uv), "최근 " + d.days + "일") +
+    kpi("페이지뷰", num(t.pv), "") +
+    kpi("신청 시작", num(started), pct(started, visit) + "% of 방문자") +
+    kpi("신청 완료(기록)", num(applied), pct(applied, visit) + "% of 방문자") +
+    kpi("신청서(시트)", num(a.total), "누적 전체") +
+    kpi("입금 확인", num(a.confirmed), num(a.sumConfirmed) + "원") + '</div></div>';
+
+  h += '<div class="sec"><h2>일별 추이</h2><div class="card chart"><div class="legend"><span><i style="background:var(--bar)"></i>방문자</span><span><i style="background:var(--bar2)"></i>페이지뷰</span></div>' + dailyChart(d.daily) + '</div></div>';
+
+  /* 퍼널 */
+  var fr = f.map(function(s, i){
+    var prev = i ? f[i - 1].n : s.n, lost = i ? Math.max(0, prev - s.n) : 0;
+    return '<div class="row"><span class="lb">' + esc(s.label) + '</span><span class="nv">' + num(s.n) + '<small>' + pct(s.n, visit) + '%</small></span><span class="tr"><i style="width:' + (visit ? s.n / visit * 100 : 0) + '%"></i></span>' +
+      (i ? '<span class="step">이전 단계에서 ' + num(lost) + '명 줄었어요 (이어간 비율 ' + pct(s.n, prev) + '%)</span>' : '') + '</div>';
+  }).join("");
+  var dmax = Math.max.apply(null, d.dropoff.map(function(x){ return x.n; }).concat([1]));
+  var dropTotal = d.dropoff.reduce(function(s, x){ return s + x.n; }, 0);
+  h += '<div class="sec grid2"><div class="card"><h3 style="font-size:16px;margin-bottom:14px">신청 퍼널 <small style="font-weight:500;color:var(--mute);font-size:12.5px">방문자 기준(중복 제외)</small></h3><div class="rows">' + fr + '</div></div>' +
+    '<div class="card"><h3 style="font-size:16px;margin-bottom:14px">신청을 시작했지만 완료하지 않은 방문자</h3>' +
+    '<div class="hl">신청을 시작한 ' + num(f[2].n) + '명 중 ' + num(dropTotal) + '명이 끝까지 가지 않았어요.</div><div class="rows">' + bars(d.dropoff, dmax, "w") + '</div>' +
+    '<p class="note">제출을 시도했지만 입력 오류로 막힌 방문자: ' + num(d.invalid) + '명<br>이탈한 방문자는 익명이라 이름·연락처는 알 수 없어요. 어느 단계에서 멈췄는지만 보여요.</p></div></div>';
+
+  /* 선택 분포 */
+  var am = d.applyMode, tr = d.tracks;
+  var typeItems = [{ label: "신규 멤버", n: am["new"] || 0 }, { label: "기존 멤버", n: am.old || 0 }];
+  var trackItems = [
+    { label: "신규 · 일반 트랙", n: tr["new:일반"] || 0 }, { label: "신규 · 비즈니스 트랙", n: tr["new:비즈니스"] || 0 },
+    { label: "기존 · 일반 트랙", n: tr["old:일반"] || 0 }, { label: "기존 · 비즈니스 트랙", n: tr["old:비즈니스"] || 0 }
+  ];
+  var gens = ["1기", "2기", "3기"].map(function(g){ return { label: g + " 선택", n: d.gens[g] || 0 }; });
+  var mx1 = Math.max.apply(null, typeItems.concat(trackItems, gens).map(function(x){ return x.n; }).concat([1]));
+  h += '<div class="sec grid3"><div class="card"><h3 style="font-size:16px;margin-bottom:14px">신청 시작 유형</h3><div class="rows">' + bars(typeItems, mx1) + '</div></div>' +
+    '<div class="card"><h3 style="font-size:16px;margin-bottom:14px">트랙 선택</h3><div class="rows">' + bars(trackItems, mx1) + '</div></div>' +
+    '<div class="card"><h3 style="font-size:16px;margin-bottom:14px">기존 멤버 기수</h3><div class="rows">' + bars(gens, mx1) + '</div></div></div>';
+
+  /* 읽은 위치 */
+  var secName = { fit: "고민과 변화", people: "레클 동료들", rec: "추천", program: "활동", buddy: "짝꿍 피드백", reviews: "후기", past: "지난 활동", schedule: "일정", tracks: "트랙", apply: "신청하기", last: "마무리 문구" };
+  var secItems = Object.keys(secName).map(function(k){ return { label: secName[k], n: d.sections[k] || 0, sub: pct(d.sections[k] || 0, visit) + "%" }; });
+  var scrItems = [25, 50, 75, 100].map(function(m){ return { label: "스크롤 " + m + "%", n: d.scroll[m] || 0, sub: pct(d.scroll[m] || 0, visit) + "%" }; });
+  h += '<div class="sec grid2"><div class="card"><h3 style="font-size:16px;margin-bottom:14px">어디까지 읽었나 (섹션 도달)</h3><div class="rows">' + bars(secItems, visit) + '</div></div>' +
+    '<div class="card"><h3 style="font-size:16px;margin-bottom:14px">스크롤 깊이</h3><div class="rows">' + bars(scrItems, visit) + '</div>' +
+    '<h3 style="font-size:16px;margin:22px 0 14px">신청하기 버튼 클릭 위치</h3><div class="rows">' + bars(Object.keys(d.cta).map(function(k){ return { label: { nav: "상단 메뉴", hero: "첫 화면", footer: "푸터", other: "기타" }[k] || k, n: d.cta[k] }; }), Math.max.apply(null, Object.keys(d.cta).map(function(k){ return d.cta[k]; }).concat([1]))) + '</div></div></div>';
+
+  /* 유입·기기 */
+  var devItems = Object.keys(d.devices).map(function(k){ return { label: { mobile: "모바일", desktop: "데스크톱" }[k] || k, n: d.devices[k], sub: pct(d.devices[k], visit) + "%" }; });
+  h += '<div class="sec grid2"><div class="card"><h3 style="font-size:16px;margin-bottom:14px">유입 경로</h3><div class="rows">' + (d.refs.length ? bars(d.refs.map(function(r){ return { label: r.k, n: r.n }; }), d.refs[0].n) : '<p class="empty">데이터가 없어요</p>') + '</div>' +
+    (d.srcs.length ? '<p class="note">링크에 <b>?utm_source=이름</b>을 붙이면 여기에 구분돼 보여요.</p><div class="rows" style="margin-top:12px">' + bars(d.srcs.map(function(r){ return { label: "utm: " + r.k, n: r.n }; }), d.srcs[0].n) + '</div>' : '<p class="note">링크 뒤에 <b>?utm_source=instagram</b>처럼 붙여 공유하면 채널별로 나눠 볼 수 있어요.</p>') + '</div>' +
+    '<div class="card"><h3 style="font-size:16px;margin-bottom:14px">기기</h3><div class="rows">' + bars(devItems, visit) + '</div></div></div>';
+
+  /* 신청 목록 */
+  h += '<div class="sec"><h2>신청 목록 <small>전체 ' + num(a.total) + '건 · 입금 확인 ' + num(a.confirmed) + '건 · 예상 ' + num(a.sumAll) + '원</small></h2>' +
+    '<div class="tools"><input type="search" id="q" placeholder="이름, 이메일, 연락처 검색" aria-label="신청 검색"><label><input type="checkbox" id="unpaid"> 입금 확인 전만</label><button class="btn ghost sm" id="dl" type="button">CSV 내려받기</button></div>' +
+    '<div class="tbl"><table><thead><tr><th>접수시각</th><th>구분</th><th>트랙</th><th>참가비</th><th>성함/닉네임</th><th>이메일</th><th>연락처</th><th>입금</th></tr></thead><tbody id="rows"></tbody></table></div>' +
+    '<p class="note">입금 확인 표시는 구글 시트의 "입금 확인" 열에 O를 적으면 여기에 반영돼요. 행을 누르면 신청 내용을 볼 수 있어요.</p></div>';
+
+  $("body").innerHTML = h;
+  $("q").addEventListener("input", drawRows); $("unpaid").addEventListener("change", drawRows);
+  $("dl").addEventListener("click", function(){
+    var blob = new Blob([csv(a.rows)], { type: "text/csv;charset=utf-8" }), u = URL.createObjectURL(blob), l = document.createElement("a");
+    l.href = u; l.download = "layered-club-4-applications.csv"; document.body.appendChild(l); l.click(); l.remove(); setTimeout(function(){ URL.revokeObjectURL(u); }, 1000);
+  });
+  drawRows();
+}
+function kpi(label, val, sub){ return '<div class="kpi"><span>' + label + '</span><b>' + val + '</b><i>' + (sub || "&nbsp;") + '</i></div>'; }
+
+function drawRows(){
+  var q = ($("q").value || "").trim().toLowerCase(), unpaid = $("unpaid").checked;
+  var rows = data.applications.rows.filter(function(r){
+    if(unpaid && r.confirmed) return false;
+    if(!q) return true;
+    return (r.name + " " + r.email + " " + r.tel).toLowerCase().indexOf(q) > -1;
+  });
+  if(!rows.length){ $("rows").innerHTML = '<tr><td colspan="8" class="empty">신청이 없어요</td></tr>'; return; }
+  $("rows").innerHTML = rows.map(function(r, i){
+    var main = '<tr class="m" data-i="' + i + '"><td>' + esc(r.ts) + '</td><td>' + esc(r.type) + (r.gen ? '<br><small style="color:var(--mute)">' + esc(r.gen) + '</small>' : '') + '</td><td>' + esc(r.track) + '</td><td>' + num(r.price) + '원</td><td><b>' + esc(r.name) + '</b></td><td>' + esc(r.email) + '</td><td>' + esc(r.tel) + '</td><td><span class="pill ' + (r.confirmed ? "ok" : "no") + '">' + (r.confirmed ? "확인" : "대기") + '</span></td></tr>';
+    var det = '<tr class="d" hidden><td colspan="8"><b>신청 이유</b> ' + esc(r.why) + '<br><b>얻어가고 싶은 것</b> ' + esc(r.goal) + '<br><b>계정</b> ' + esc(r.link || "-") + ' · <b>나이</b> ' + esc(r.age || "-") + ' · <b>MBTI</b> ' + esc(r.mbti || "-") + ' · <b>독서모임</b> ' + esc(r.book || "-") + ' · <b>입금 체크</b> ' + esc(r.paidCheck || "-") + (r.memo ? '<br><b>메모</b> ' + esc(r.memo) : '') + '</td></tr>';
+    return main + det;
+  }).join("");
+  Array.prototype.forEach.call($("rows").querySelectorAll("tr.m"), function(tr){
+    tr.addEventListener("click", function(){ var n = tr.nextElementSibling; n.hidden = !n.hidden; });
+  });
+}
+
+$("lf").addEventListener("submit", function(e){ e.preventDefault(); key = $("pw").value; $("pw").value = ""; $("lerr").textContent = "확인 중…"; load(); });
+$("refresh").addEventListener("click", load);
+$("days").addEventListener("change", load);
+$("logout").addEventListener("click", function(){ setKey(""); key = ""; data = null; showLogin(""); });
+
+key = getKey();
+if(key){ showApp(); load(); } else { showLogin(""); }
+</script>
+</body>
+</html>
