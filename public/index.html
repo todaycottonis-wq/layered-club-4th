@@ -317,6 +317,18 @@ input:focus,textarea:focus{outline:2px solid var(--ink);outline-offset:1px;borde
 .acct small{display:block;color:var(--mute);font-size:13px}
 .pay ul{margin:0;padding-left:18px;color:var(--g2);font-size:14.5px}
 .pay li+li{margin-top:4px}
+.pmodal{position:fixed;inset:0;z-index:60;background:rgba(0,0,0,.55);display:grid;place-items:center;padding:16px;overflow-y:auto}
+.pmodal[hidden]{display:none}
+.pmbox{position:relative;background:var(--bg);border-radius:22px;width:100%;max-width:460px;padding:30px 22px 22px;margin:auto;box-shadow:0 24px 80px rgba(0,0,0,.25)}
+.pmbox .pay{background:transparent;padding:0}
+.pmx{position:absolute;top:10px;right:12px;width:36px;height:36px;border:0;background:transparent;font-size:26px;line-height:1;color:var(--mute);cursor:pointer}
+.pmsub{color:var(--g2);font-size:14.5px;margin:0 0 14px;padding-right:20px}
+.pmact{display:grid;gap:8px;margin-top:18px}
+.pmback{border:0;background:transparent;color:var(--mute);font:600 14px var(--font);padding:10px;cursor:pointer;text-decoration:underline}
+.donepay{background:var(--soft);border-radius:14px;padding:14px 16px;margin:14px auto 10px;max-width:360px}
+.donepay small{display:block;color:var(--mute);font-size:13px;margin-bottom:4px}
+.donepay b{font-size:15.5px}
+body.pm-open{overflow:hidden}
 .done{text-align:center;padding:48px 8px}
 .done h2{margin-bottom:10px}
 .done p{color:var(--g2);margin-bottom:8px}
@@ -727,47 +739,23 @@ footer{background:var(--soft);padding-block:48px max(48px,env(safe-area-inset-bo
             </div></fieldset><p class="err" role="alert"></p>
         </div>
 
-        <div class="divider"></div>
-
-        <div class="pay">
-          <h3>10. 참가비 안내</h3>
-          <p style="color:var(--g2);margin-bottom:12px">레이어드클럽 4기 참여를 원하신다면 아래 금액을 입금해 주세요.</p>
-          <div class="pcard">
-            <div class="pl" id="plabel"></div>
-            <div class="pa"><span class="pnorm" id="pnorm" hidden></span><span class="pamt" id="pamt"></span></div>
-          </div>
-          <div class="acct">
-            <div><small>신한은행 · 예금주 박*연</small><b id="acctNo">110-484-166-620</b></div>
-            <button type="button" class="btn ghost" id="copy">계좌 복사</button>
-          </div>
-          <ul>
-            <li>입금자명은 <b>신청서 성함과 동일하게</b> 해주세요. 다를 경우 확인이 어려울 수 있어요.</li>
-            <li>OT 진행 이후에는 환불이 어려워요.</li>
-            <li>환불이 필요하면 인스타그램 @cotton.224 DM으로 부탁드려요.</li>
-          </ul>
-          <div class="q2" data-name="paid" style="margin-top:16px">
-            <label class="opt"><input type="checkbox" name="paid" value="입금 완료"><span>입금 완료했어요!</span></label><p class="err" role="alert"></p>
-          </div>
-        </div>
-
         <div class="q2" data-name="agree">
           <fieldset><legend class="ql">아래 안내 사항을 모두 확인하셨나요?<span class="req-star">*</span></legend>
             <div class="chkl">
-              <label class="opt"><input type="checkbox" class="agree"><span>참가비와 입금 계좌를 확인했습니다.</span></label>
-              <label class="opt"><input type="checkbox" class="agree"><span>입금자명은 신청서 성함과 동일하게 작성합니다.</span></label>
               <label class="opt"><input type="checkbox" class="agree"><span>4기 활동 기간은 2026.11.16 ~ 2026.12.20, 약 5주입니다.</span></label>
               <label class="opt"><input type="checkbox" class="agree"><span>온라인 OT는 11월 16일(월) 오후 9시이며, 세부 일정은 별도 안내를 통해 확인합니다.</span></label>
               <label class="opt"><input type="checkbox" class="agree"><span>OT 진행 이후 환불이 어렵다는 점을 확인했습니다.</span></label>
             </div></fieldset><p class="err" role="alert"></p>
         </div>
 
-        <button class="btn lg" type="submit" id="submit">신청서 제출하기</button>
+        <button class="btn lg" type="submit" id="submit">신청서 제출하고 결제 안내 보기</button>
       </form>
     </section>
 
     <section class="scr done" id="scr-done" hidden>
       <h2>신청해주셔서 감사해요!</h2>
-      <p>입금 확인 후 <b>OT 안내 메일</b>로 자세한 일정을 안내드릴게요.</p>
+      <p id="doneMsg">입금 확인 후 <b>OT 안내 메일</b>로 자세한 일정을 안내드릴게요.</p>
+      <div class="donepay" id="donePay" hidden><small>아직 입금 전이라면 아래 계좌로 입금해 주세요.</small><b id="donePayTxt"></b></div>
       <p>OT는 11월 16일(월) 오후 9시, 온라인으로 진행돼요.</p>
       <p style="font-size:14px;color:var(--mute)">궁금한 점은 인스타그램 @cotton.224 DM으로 문의해 주세요.</p>
       <div class="preview-note" id="previewNote" hidden>미리보기 화면이에요. 응답 저장 경로가 아직 연결되지 않아서 입력한 내용은 어디에도 전송되지 않았어요.</div>
@@ -776,6 +764,33 @@ footer{background:var(--soft);padding-block:48px max(48px,env(safe-area-inset-bo
   </div>
 </div>
 <div class="lbox" id="lb" hidden><button type="button" class="lbx" id="lbx" aria-label="닫기">×</button><img id="lbi" alt=""></div>
+<div class="pmodal" id="payModal" role="dialog" aria-modal="true" aria-labelledby="pmTitle" hidden>
+  <div class="pmbox">
+    <button type="button" class="pmx" id="pmClose" aria-label="닫기">×</button>
+    <div class="pay">
+      <h3 id="pmTitle">참가비 안내</h3>
+      <p class="pmsub">신청서 작성이 끝났어요. 레이어드클럽 4기 참여를 원하신다면 아래 금액을 입금해 주세요.</p>
+      <div class="pcard">
+        <div class="pl" id="plabel"></div>
+        <div class="pa"><span class="pnorm" id="pnorm" hidden></span><span class="pamt" id="pamt"></span></div>
+      </div>
+      <div class="acct">
+        <div><small>신한은행 · 예금주 박*연</small><b id="acctNo">110-484-166-620</b></div>
+        <button type="button" class="btn ghost" id="copy">계좌 복사</button>
+      </div>
+      <ul>
+        <li>입금자명은 <b>신청서 성함과 동일하게</b> 해주세요. 다를 경우 확인이 어려울 수 있어요.</li>
+        <li>OT 진행 이후에는 환불이 어려워요.</li>
+        <li>환불이 필요하면 인스타그램 @cotton.224 DM으로 부탁드려요.</li>
+      </ul>
+    </div>
+    <div class="pmact">
+      <button type="button" class="btn lg" id="payDone">입금 완료했어요</button>
+      <button type="button" class="btn lg ghost" id="payLater">나중에 입금할게요</button>
+      <button type="button" class="pmback" id="payBack">신청서 수정하기</button>
+    </div>
+  </div>
+</div>
 <div class="toast" id="toast" role="status"></div>
 
 <script>
@@ -923,10 +938,6 @@ function prepare(name){
     document.getElementById("formStep").textContent = "STEP " + (old2 ? "3 / 3" : "2 / 2");
     document.getElementById("sum").innerHTML = '<span class="cp">'+(old2 ? gen + " 멤버" : "4기 신규 멤버")+'</span><span class="cp">'+tt+' 트랙</span>';
     document.getElementById("lvlWrap").hidden = tt !== "일반";
-    var p = currentPrice();
-    document.getElementById("plabel").textContent = p.label;
-    var nm = document.getElementById("pnorm"); nm.hidden = !p.normal; nm.textContent = p.normal ? won(p.normal) : "";
-    document.getElementById("pamt").textContent = won(p.amount);
   }
 }
 function route(){
@@ -995,11 +1006,10 @@ form.addEventListener("submit", function(ev){
   if(!field("why")) errors.why = "신청 이유를 적어 주세요.";
   if(!field("goal")) errors.goal = "얻어가고 싶은 부분을 한 줄 적어 주세요.";
   if(!radio("book")) errors.book = "독서모임 참여 의향을 선택해 주세요.";
-  if(!form.querySelector('input[name="paid"]').checked) errors.paid = "입금 후 체크해 주세요.";
   var allAgree = Array.prototype.every.call(form.querySelectorAll(".agree"), function(c){ return c.checked; });
   if(!allAgree) errors.agree = "안내 사항을 모두 확인해 주세요.";
 
-  ["level","name","email","tel","why","goal","book","paid","agree"].forEach(function(n){ setErr(n, errors[n]); });
+  ["level","name","email","tel","why","goal","book","agree"].forEach(function(n){ setErr(n, errors[n]); });
   var first = Object.keys(errors)[0];
   if(first || !p){
     TRK.ev("submit_invalid", first || "price");
@@ -1007,19 +1017,51 @@ form.addEventListener("submit", function(ev){
     return;
   }
 
-  var values = {
+  pending = {
     gen: mode === "new" ? "4기 신규 멤버" : gen,
     track: tt === "일반" ? "일반 · " + radio("level") : "비즈니스",
     price: String(p.amount),
     name: field("name"), email: field("email"), tel: field("tel"), link: field("link"), why: field("why"), goal: field("goal"),
-    age: field("age"), mbti: field("mbti"), book: radio("book"), paid: "입금 완료"
+    age: field("age"), mbti: field("mbti"), book: radio("book"), paid: ""
   };
-  var btn = document.getElementById("submit"); btn.disabled = true; btn.textContent = "제출 중...";
+  openPay(p);
+});
+
+/* ---------- 결제 안내창: 신청서를 다 채워 제출하면 뜨고, 여기서 확정해야 전송돼요 ---------- */
+var pending = null, sending = false;
+var pm = document.getElementById("payModal");
+function openPay(p){
+  document.getElementById("plabel").textContent = p.label;
+  var nm = document.getElementById("pnorm"); nm.hidden = !p.normal; nm.textContent = p.normal ? won(p.normal) : "";
+  document.getElementById("pamt").textContent = won(p.amount);
+  pm.hidden = false; document.body.classList.add("pm-open"); pm.scrollTop = 0;
+  TRK.once("pay_view");
+  setTimeout(function(){ document.getElementById("payDone").focus({preventScroll:true}); }, 50);
+}
+function closePay(){ if(sending) return; pm.hidden = true; document.body.classList.remove("pm-open"); }
+document.getElementById("pmClose").addEventListener("click", closePay);
+document.getElementById("payBack").addEventListener("click", closePay);
+pm.addEventListener("click", function(e){ if(e.target === pm) closePay(); });
+document.addEventListener("keydown", function(e){ if(e.key === "Escape" && !pm.hidden) closePay(); });
+
+function sendApplication(paid){
+  if(!pending || sending) return;
+  sending = true;
+  var values = {}; Object.keys(pending).forEach(function(k){ values[k] = pending[k]; });
+  values.paid = paid;
+  var btns = [document.getElementById("payDone"), document.getElementById("payLater")];
+  var labels = btns.map(function(b){ return b.textContent; });
+  btns.forEach(function(b){ b.disabled = true; }); btns[paid === "입금 완료" ? 0 : 1].textContent = "제출 중...";
+  var reset = function(){ sending = false; btns.forEach(function(b, i){ b.disabled = false; b.textContent = labels[i]; }); };
   var finish = function(sent){
     submitted = true;
-    TRK.ev("submit_success", mode + ":" + tt); TRK.flush();
+    TRK.ev("submit_success", mode + ":" + tt + ":" + (paid === "입금 완료" ? "paid" : "later")); TRK.flush();
     document.getElementById("previewNote").hidden = sent;
-    btn.disabled = false; btn.textContent = "신청서 제출하기";
+    var later = paid !== "입금 완료", dp = document.getElementById("donePay");
+    dp.hidden = !later;
+    if(later) document.getElementById("donePayTxt").textContent = "신한은행 " + document.getElementById("acctNo").textContent + " (예금주 박*연) · " + document.getElementById("pamt").textContent;
+    document.getElementById("doneMsg").innerHTML = later ? "<b>입금이 확인되면</b> OT 안내 메일로 자세한 일정을 안내드릴게요." : "입금 확인 후 <b>OT 안내 메일</b>로 자세한 일정을 안내드릴게요.";
+    pm.hidden = true; document.body.classList.remove("pm-open"); sending = false; reset();
     go("done");
   };
   if(CONFIG.endpoint){
@@ -1033,10 +1075,12 @@ form.addEventListener("submit", function(ev){
       body.append("memberType", mode === "new" ? "신규" : "기존");
     }
     fetch(CONFIG.endpoint, {method:"POST", mode:"no-cors", body:body}).then(function(){ finish(true); }, function(){
-      btn.disabled = false; btn.textContent = "신청서 제출하기"; toast("전송에 실패했어요. 잠시 후 다시 시도해 주세요.");
+      reset(); toast("전송에 실패했어요. 잠시 후 다시 시도해 주세요.");
     });
   } else { finish(false); }
-});
+}
+document.getElementById("payDone").addEventListener("click", function(){ sendApplication("입금 완료"); });
+document.getElementById("payLater").addEventListener("click", function(){ sendApplication("입금 전"); });
 
 /* 롤링: 한 세트를 복제해 화면을 채우고, 세트 폭만큼 이동하며 이음새 없이 반복해요. */
 (function(){
