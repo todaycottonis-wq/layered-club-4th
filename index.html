@@ -305,18 +305,11 @@ input:focus,textarea:focus{outline:2px solid var(--ink);outline-offset:1px;borde
 .acct small{display:block;color:var(--mute);font-size:13px}
 .pay ul{margin:0;padding-left:18px;color:var(--g2);font-size:14.5px}
 .pay li+li{margin-top:4px}
-.pmodal{position:fixed;inset:0;z-index:60;background:rgba(0,0,0,.55);display:grid;place-items:center;padding:16px;overflow-y:auto}
-.pmodal[hidden]{display:none}
-.pmbox{position:relative;background:var(--bg);border-radius:22px;width:100%;max-width:460px;padding:30px 22px 22px;margin:auto;box-shadow:0 24px 80px rgba(0,0,0,.25)}
-.pmbox .pay{background:transparent;padding:0}
-.pmx{position:absolute;top:10px;right:12px;width:36px;height:36px;border:0;background:transparent;font-size:26px;line-height:1;color:var(--mute);cursor:pointer}
-.pmsub{color:var(--g2);font-size:14.5px;margin:0 0 14px;padding-right:20px}
+.pmsub{color:var(--g2);font-size:14.5px;margin:0 0 16px}
 .pmact{display:grid;gap:8px;margin-top:18px}
-.pmback{border:0;background:transparent;color:var(--mute);font:600 14px var(--font);padding:10px;cursor:pointer;text-decoration:underline}
 .donepay{background:var(--soft);border-radius:14px;padding:14px 16px;margin:14px auto 10px;max-width:360px}
 .donepay small{display:block;color:var(--mute);font-size:13px;margin-bottom:4px}
 .donepay b{font-size:15.5px}
-body.pm-open{overflow:hidden}
 .done{text-align:center;padding:48px 8px}
 .done h2{margin-bottom:10px}
 .done p{color:var(--g2);margin-bottom:8px}
@@ -734,8 +727,33 @@ footer{background:var(--soft);padding-block:48px max(48px,env(safe-area-inset-bo
             </div></fieldset><p class="err" role="alert"></p>
         </div>
 
-        <button class="btn lg" type="submit" id="submit">신청서 제출하고 결제 안내 보기</button>
+        <button class="btn lg" type="submit" id="submit">다음: 결제 안내 보기</button>
       </form>
+    </section>
+
+    <section class="scr" id="scr-pay" hidden>
+      <p class="stepi" id="payStep">STEP 마지막</p>
+      <h2 id="pmTitle">참가비 안내</h2>
+      <p class="pmsub">신청서 작성이 끝났어요. 레이어드클럽 4기 참여를 원하신다면 아래 금액을 입금해 주세요.</p>
+      <div class="pay">
+        <div class="pcard">
+          <div class="pl" id="plabel"></div>
+          <div class="pa"><span class="pnorm" id="pnorm" hidden></span><span class="pamt" id="pamt"></span></div>
+        </div>
+        <div class="acct">
+          <div><small>신한은행 · 예금주 박*연</small><b id="acctNo">110-484-166-620</b></div>
+          <button type="button" class="btn ghost" id="copy">계좌 복사</button>
+        </div>
+        <ul>
+          <li>입금자명은 <b>신청서 성함과 동일하게</b> 해주세요. 다를 경우 확인이 어려울 수 있어요.</li>
+          <li>OT 진행 이후에는 환불이 어려워요.</li>
+          <li>환불이 필요하면 인스타그램 @cotton.224 DM으로 부탁드려요.</li>
+        </ul>
+      </div>
+      <div class="pmact">
+        <button type="button" class="btn lg" id="payDone">입금 완료했어요</button>
+        <button type="button" class="btn lg ghost" id="payLater">나중에 입금할게요</button>
+      </div>
     </section>
 
     <section class="scr done" id="scr-done" hidden>
@@ -750,33 +768,6 @@ footer{background:var(--soft);padding-block:48px max(48px,env(safe-area-inset-bo
   </div>
 </div>
 <div class="lbox" id="lb" hidden><button type="button" class="lbx" id="lbx" aria-label="닫기">×</button><img id="lbi" alt=""></div>
-<div class="pmodal" id="payModal" role="dialog" aria-modal="true" aria-labelledby="pmTitle" hidden>
-  <div class="pmbox">
-    <button type="button" class="pmx" id="pmClose" aria-label="닫기">×</button>
-    <div class="pay">
-      <h3 id="pmTitle">참가비 안내</h3>
-      <p class="pmsub">신청서 작성이 끝났어요. 레이어드클럽 4기 참여를 원하신다면 아래 금액을 입금해 주세요.</p>
-      <div class="pcard">
-        <div class="pl" id="plabel"></div>
-        <div class="pa"><span class="pnorm" id="pnorm" hidden></span><span class="pamt" id="pamt"></span></div>
-      </div>
-      <div class="acct">
-        <div><small>신한은행 · 예금주 박*연</small><b id="acctNo">110-484-166-620</b></div>
-        <button type="button" class="btn ghost" id="copy">계좌 복사</button>
-      </div>
-      <ul>
-        <li>입금자명은 <b>신청서 성함과 동일하게</b> 해주세요. 다를 경우 확인이 어려울 수 있어요.</li>
-        <li>OT 진행 이후에는 환불이 어려워요.</li>
-        <li>환불이 필요하면 인스타그램 @cotton.224 DM으로 부탁드려요.</li>
-      </ul>
-    </div>
-    <div class="pmact">
-      <button type="button" class="btn lg" id="payDone">입금 완료했어요</button>
-      <button type="button" class="btn lg ghost" id="payLater">나중에 입금할게요</button>
-      <button type="button" class="pmback" id="payBack">신청서 수정하기</button>
-    </div>
-  </div>
-</div>
 <div class="toast" id="toast" role="status"></div>
 
 <script>
@@ -900,7 +891,7 @@ var BARS = [
    각 단계는 새 화면이고, 가격은 맨 마지막 화면의 참가비 안내에서만 보여요. */
 var landing = document.getElementById("landing"), flow = document.getElementById("flow");
 var form = document.getElementById("form");
-var SCR = { gen:"scr-gen", track:"scr-track", form:"scr-form", done:"scr-done" };
+var SCR = { gen:"scr-gen", track:"scr-track", form:"scr-form", pay:"scr-pay", done:"scr-done" };
 var mode = "", gen = "", tt = "", submitted = false;
 
 function radio(n){ var c = form.querySelector('input[name="'+n+'"]:checked'); return c ? c.value : ""; }
@@ -916,12 +907,12 @@ function currentPrice(){
 function prepare(name){
   if(name === "track"){
     var old = mode === "old";
-    document.getElementById("trackStep").textContent = "STEP " + (old ? "2 / 3" : "1 / 2");
+    document.getElementById("trackStep").textContent = "STEP " + (old ? "2 / 4" : "1 / 3");
     document.getElementById("trackSub").textContent = old ? gen + " 멤버로 신청해요." : "4기 신규 멤버로 신청해요.";
   }
   if(name === "form"){
     var old2 = mode === "old";
-    document.getElementById("formStep").textContent = "STEP " + (old2 ? "3 / 3" : "2 / 2");
+    document.getElementById("formStep").textContent = "STEP " + (old2 ? "3 / 4" : "2 / 3");
     document.getElementById("sum").innerHTML = '<span class="cp">'+(old2 ? gen + " 멤버" : "4기 신규 멤버")+'</span><span class="cp">'+tt+' 트랙</span>';
     document.getElementById("lvlWrap").hidden = tt !== "일반";
   }
@@ -932,6 +923,8 @@ function route(){
   if(name === "gen" && mode !== "old") name = "";
   if(name === "track" && !(mode === "new" || (mode === "old" && gen))) name = "";
   if(name === "form" && !(tt && (mode === "new" || gen))) name = "";
+  if(name === "pay" && !pending) name = "form";
+  if(name === "form" && !(tt && (mode === "new" || gen))) name = "";
   if(name === "done" && !submitted) name = "";
   if(!SCR[name]){
     landing.hidden = false; flow.hidden = true;
@@ -941,6 +934,7 @@ function route(){
   }
   prepare(name);
   if(name === "form") TRK.once("form_view");
+  if(name === "pay") fillPay();
   landing.hidden = true; flow.hidden = false;
   Object.keys(SCR).forEach(function(k){ document.getElementById(SCR[k]).hidden = k !== name; });
   window.scrollTo(0, 0);
@@ -957,7 +951,8 @@ document.addEventListener("click", function(e){
 });
 document.getElementById("back").addEventListener("click", function(){
   var h = (location.hash || "").replace("#apply-", "");
-  if(h === "form") go("track");
+  if(h === "pay") go("form");
+  else if(h === "form") go("track");
   else if(h === "track") go(mode === "old" ? "gen" : "");
   else go("");
 });
@@ -1010,25 +1005,19 @@ form.addEventListener("submit", function(ev){
     name: field("name"), email: field("email"), tel: field("tel"), link: field("link"), why: field("why"), goal: field("goal"),
     age: field("age"), mbti: field("mbti"), book: radio("book"), paid: ""
   };
-  openPay(p);
+  go("pay");
 });
 
-/* ---------- 결제 안내창: 신청서를 다 채워 제출하면 뜨고, 여기서 확정해야 전송돼요 ---------- */
+/* ---------- 결제 안내 화면: 신청서를 다 채워 제출해야 넘어오고, 금액은 여기서 처음 보여요 ---------- */
 var pending = null, sending = false;
-var pm = document.getElementById("payModal");
-function openPay(p){
+function fillPay(){
+  var p = currentPrice(); if(!p) return;
   document.getElementById("plabel").textContent = p.label;
   var nm = document.getElementById("pnorm"); nm.hidden = !p.normal; nm.textContent = p.normal ? won(p.normal) : "";
   document.getElementById("pamt").textContent = won(p.amount);
-  pm.hidden = false; document.body.classList.add("pm-open"); pm.scrollTop = 0;
+  document.getElementById("payStep").textContent = "STEP " + (mode === "old" ? "4 / 4" : "3 / 3");
   TRK.once("pay_view");
-  setTimeout(function(){ document.getElementById("payDone").focus({preventScroll:true}); }, 50);
 }
-function closePay(){ if(sending) return; pm.hidden = true; document.body.classList.remove("pm-open"); }
-document.getElementById("pmClose").addEventListener("click", closePay);
-document.getElementById("payBack").addEventListener("click", closePay);
-pm.addEventListener("click", function(e){ if(e.target === pm) closePay(); });
-document.addEventListener("keydown", function(e){ if(e.key === "Escape" && !pm.hidden) closePay(); });
 
 function sendApplication(paid){
   if(!pending || sending) return;
@@ -1047,7 +1036,7 @@ function sendApplication(paid){
     dp.hidden = !later;
     if(later) document.getElementById("donePayTxt").textContent = "신한은행 " + document.getElementById("acctNo").textContent + " (예금주 박*연) · " + document.getElementById("pamt").textContent;
     document.getElementById("doneMsg").innerHTML = later ? "<b>입금이 확인되면</b> OT 안내 메일로 자세한 일정을 안내드릴게요." : "입금 확인 후 <b>OT 안내 메일</b>로 자세한 일정을 안내드릴게요.";
-    pm.hidden = true; document.body.classList.remove("pm-open"); sending = false; reset();
+    sending = false; reset();
     go("done");
   };
   if(CONFIG.endpoint){
