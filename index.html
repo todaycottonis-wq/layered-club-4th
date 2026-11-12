@@ -117,14 +117,16 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
 .box p{font-size:15px;color:var(--g2)}
 
 /* 추천 */
-.rec{display:grid;gap:12px;grid-template-columns:1fr}
+.rec{display:flex;gap:12px;overflow-x:auto;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;margin:0 -16px;padding:2px 16px 14px;scroll-padding:0 16px;scrollbar-width:none}
+.rec::-webkit-scrollbar,.acts::-webkit-scrollbar{display:none}
+.rec>.rc,.acts>.act{flex:none;width:82%;max-width:340px;scroll-snap-align:start}
 .rc{background:var(--soft);border-radius:16px;padding:22px;min-width:0;display:flex;gap:16px;align-items:flex-start}
 .rc .n{flex:none;width:34px;height:34px;border-radius:50%;background:var(--acc);color:var(--onacc);display:grid;place-items:center;font-weight:800;font-size:15px;font-variant-numeric:tabular-nums}
 .rc h3{font-size:17px;line-height:1.45;margin-bottom:6px}
 .rc p{font-size:14.5px;color:var(--g2)}
 
 /* 활동 */
-.acts{display:grid;gap:12px;grid-template-columns:1fr}
+.acts{display:flex;gap:12px;overflow-x:auto;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;margin:0 -16px;padding:2px 16px 14px;scroll-padding:0 16px;scrollbar-width:none}
 .act{background:var(--soft);border-radius:16px;padding:20px 22px;min-width:0}
 .act h3{font-size:16.5px;margin:10px 0 6px}
 .act p{font-size:14.5px;color:var(--g2)}
@@ -335,8 +337,9 @@ footer{background:var(--soft);padding-block:48px max(48px,env(safe-area-inset-bo
   .flow{grid-template-columns:repeat(3,minmax(0,1fr))}
   .metrics{grid-template-columns:1fr 2fr}
   .boxes{grid-template-columns:repeat(3,minmax(0,1fr))}
-  .rec{grid-template-columns:repeat(2,minmax(0,1fr))}
-  .acts{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .rec{display:grid;overflow:visible;margin:0;padding:0;grid-template-columns:repeat(2,minmax(0,1fr))}
+  .rec>.rc,.acts>.act{width:auto;max-width:none}
+  .acts{display:grid;overflow:visible;margin:0;padding:0;grid-template-columns:repeat(3,minmax(0,1fr))}
   .act.span2{grid-column:span 2}
   .bpts{grid-template-columns:repeat(3,minmax(0,1fr))}
   .bshots{grid-template-columns:repeat(3,minmax(0,1fr))}
@@ -433,6 +436,7 @@ footer{background:var(--soft);padding-block:48px max(48px,env(safe-area-inset-bo
   <!-- 추천 -->
   <section class="s wrap" id="rec">
     <div class="hd"><h2>이런 분에게 레클을 추천해요</h2></div>
+    <p class="rvhint">← 옆으로 넘겨서 보세요 →</p>
     <div class="rec">
       <div class="rc"><span class="n">1</span><div><h3>연말을 밀도 있게 마무리하고 싶은 분</h3><p>11월 중순부터 12월 20일까지, 한 해의 끝을 실행과 회고로 채워요.</p><p>미뤄둔 하나를 올해 안에 내보낼 수 있어요.</p></div></div>
       <div class="rc"><span class="n">2</span><div><h3>회사 밖에서 '나'라는 사람으로 존재하고, 나만의 것을 만들어내고 싶은 분</h3><p>직함 없이도 내 이름으로 꺼내볼 이야기와 콘텐츠, 상품을 5주 동안 하나씩 만들어가요.</p></div></div>
@@ -444,6 +448,7 @@ footer{background:var(--soft);padding-block:48px max(48px,env(safe-area-inset-bo
   <!-- 활동 -->
   <section class="s wrap" id="program">
     <div class="hd"><h2>4기에서 이런 활동을 해요</h2></div>
+    <p class="rvhint">← 옆으로 넘겨서 보세요 →</p>
     <div class="acts">
       <div class="act"><span class="badge req">필수</span><h3>짝꿍 피드백 & 클럽장 피드백</h3><p>짝꿍이 내 콘텐츠를 직접 보고 어디서 더 보고 싶어졌는지 알려줘요.</p><p>클럽장 피드백도 상시로 드려요.</p></div>
       <div class="act"><span class="badge req">필수</span><h3>단체 레클챗</h3><p>같은 카테고리 사람들과 함께하는 시간이에요.</p><p>막힌 지점을 가져와 이번 주 내 콘텐츠에 적용할 것 하나를 정해요.</p></div>
