@@ -136,11 +136,15 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
 
 /* 짝꿍 피드백 */
 .buddy{display:grid;gap:14px;grid-template-columns:1fr}
-.bpts{display:grid;gap:12px;align-content:start}
+.bpts,.bshots{display:flex;gap:12px;overflow-x:auto;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;margin:0 -16px;padding:2px 16px 14px;scroll-padding:0 16px;scrollbar-width:none;align-content:start}
+.bpts::-webkit-scrollbar,.bshots::-webkit-scrollbar{display:none}
+.bpts>.bpt{flex:none;width:82%;max-width:340px;scroll-snap-align:start}
+.bshots>.bshot{flex:none;width:78%;max-width:320px;height:380px;scroll-snap-align:start;position:relative}
+.bshots>.bshot img{height:100%;object-fit:cover;object-position:top}
+.bshots>.bshot::after{content:"눌러서 크게 보기";position:absolute;left:0;right:0;bottom:0;padding:34px 0 12px;text-align:center;font-size:13px;font-weight:700;color:#111;background:linear-gradient(transparent,#fff 70%)}
 .bpt{background:var(--soft);border-radius:16px;padding:20px 22px}
 .bpt h3{font-size:17px;margin-bottom:6px}
 .bpt p{font-size:14.5px;color:var(--g2)}
-.bshots{display:grid;gap:12px;grid-template-columns:1fr;align-items:start}
 .bshot{display:block;padding:0;border:1px solid var(--line);border-radius:14px;overflow:hidden;background:#fff;cursor:zoom-in;min-width:0}
 .bshot img{display:block;width:100%;height:auto}
 .lbox{position:fixed;inset:0;z-index:50;background:rgba(0,0,0,.86);display:grid;place-items:center;padding:16px}
@@ -341,8 +345,12 @@ footer{background:var(--soft);padding-block:48px max(48px,env(safe-area-inset-bo
   .rec>.rc,.acts>.act{width:auto;max-width:none}
   .acts{display:grid;overflow:visible;margin:0;padding:0;grid-template-columns:repeat(3,minmax(0,1fr))}
   .act.span2{grid-column:span 2}
-  .bpts{grid-template-columns:repeat(3,minmax(0,1fr))}
-  .bshots{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .bpts{display:grid;overflow:visible;margin:0;padding:0;grid-template-columns:repeat(3,minmax(0,1fr))}
+  .bpts>.bpt{width:auto;max-width:none}
+  .bshots{display:grid;overflow:visible;margin:0;padding:0;align-items:start;grid-template-columns:repeat(3,minmax(0,1fr))}
+  .bshots>.bshot{width:auto;max-width:none;height:auto}
+  .bshots>.bshot img{height:auto;object-fit:initial}
+  .bshots>.bshot::after{display:none}
   .masonry{display:block;columns:3;column-gap:14px;overflow:visible;margin:0;padding:0}
   .rv{width:auto;max-width:none;break-inside:avoid;margin:0 0 14px}
   .rvhint{display:none}
@@ -464,6 +472,7 @@ footer{background:var(--soft);padding-block:48px max(48px,env(safe-area-inset-bo
   <!-- 짝꿍 피드백 -->
   <section class="s wrap" id="buddy">
     <div class="hd"><h2>고봉밥 짝꿍 피드백</h2><p class="sub">5주간 짝꿍과 콘텐츠를 주고받으며<br>혼자서는 놓치기 쉬운 관점을 발견해요.</p></div>
+    <p class="rvhint">← 옆으로 넘겨서 보세요 →</p>
     <div class="buddy">
       <div class="bpts">
         <div class="bpt"><h3>내 콘텐츠를 직접 보고 알려줘요</h3><p>어디서 더 보고 싶어졌는지,<br>어느 부분에서 이야기를 놓쳤는지 알려줘요.</p></div>
