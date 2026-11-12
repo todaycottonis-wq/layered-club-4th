@@ -263,6 +263,16 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
 .tline li::after{content:"";position:absolute;left:6px;top:22px;bottom:-2px;width:2px;background:var(--line)}
 .tline li:last-child{padding-bottom:0}
 .tline li:last-child::after{display:none}
+/* 모바일: 5주 커리큘럼을 주차별 카드로 옆으로 넘겨요 / PC: 세로 타임라인 */
+.tk .tline{display:flex;gap:10px;overflow-x:auto;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;margin:0 -26px;padding:2px 26px 12px;scroll-padding:0 26px;scrollbar-width:none}
+.tk .tline::-webkit-scrollbar{display:none}
+.tk .tline li{flex:none;width:72%;max-width:280px;scroll-snap-align:start;background:#fff;border-radius:14px;padding:16px 18px}
+.tk.biz2 .tline li{background:var(--soft)}
+.tk .tline li::before,.tk .tline li::after{display:none}
+.tk .tline li:last-child{padding-bottom:16px}
+.tk .tline .wl{display:inline-block;background:var(--lime);color:var(--limeink);border-radius:99px;padding:3px 10px;font-size:12px;font-weight:800;margin-bottom:6px}
+.tk .tline h4{font-size:16px;margin:4px 0}
+.tk .tlhint{display:block;color:var(--mute);font-size:13px;margin:12px 0 0}
 .tline .wl{display:block;font-size:13px;font-weight:700;color:var(--mute)}
 .tline h4{font-size:16px;margin:2px 0}
 .tline p{font-size:14px;color:var(--g2)}
@@ -357,6 +367,14 @@ footer{background:var(--soft);padding-block:48px max(48px,env(safe-area-inset-bo
   .rec>.rc,.acts>.act{width:auto;max-width:none}
   .acts{display:grid;overflow:visible;margin:0;padding:0;grid-template-columns:repeat(3,minmax(0,1fr))}
   .act.span2{grid-column:span 2}
+  .tk .tline{display:block;overflow:visible;margin:20px 0 0;padding:0}
+  .tk .tline li{width:auto;max-width:none;background:transparent;border-radius:0;padding:0 0 24px 36px}
+  .tk.biz2 .tline li{background:transparent}
+  .tk .tline li:last-child{padding-bottom:0}
+  .tk .tline li::before,.tk .tline li::after{display:block}
+  .tk .tline li:last-child::after{display:none}
+  .tk .tline .wl{display:block;background:none;color:var(--mute);border-radius:0;padding:0;font-size:13px;font-weight:700;margin:0}
+  .tk .tlhint{display:none}
   .bpts{display:grid;overflow:visible;margin:0;padding:0;grid-template-columns:repeat(3,minmax(0,1fr))}
   .bpts>.bpt{width:auto;max-width:none}
   .bshots{display:grid;overflow:visible;margin:0;padding:0;align-items:start;grid-template-columns:repeat(3,minmax(0,1fr))}
@@ -599,6 +617,7 @@ footer{background:var(--soft);padding-block:48px max(48px,env(safe-area-inset-bo
             <li>기억되고 싶은 모습과 퍼스널 브랜딩 키워드 3가지 정하기</li>
           </ul></div>
           <h4 class="gh">5주 커리큘럼</h4>
+          <span class="tlhint">← 옆으로 넘겨서 보세요 →</span>
           <ol class="tline gen">
             <li><span class="wl">1주차 · 11/16 ~ 11/22</span><h4>퍼스널 브랜딩 워크북</h4><p>OT 내용을 바탕으로 나만의 콘텐츠 정의서를 작성해요.</p></li>
             <li><span class="wl">2주차 · 11/23 ~ 11/29</span><h4>타깃·카테고리·프로필 정리</h4><p>첫 콘텐츠를 기획하고 업로드해요.</p></li>
@@ -626,6 +645,7 @@ footer{background:var(--soft);padding-block:48px max(48px,env(safe-area-inset-bo
             <li>매주 클럽장 콘텐츠 피드백</li>
           </ul>
           <h4 class="gh">5주 커리큘럼</h4>
+          <span class="tlhint">← 옆으로 넘겨서 보세요 →</span>
           <ol class="tline gen">
             <li><span class="wl">1주차 · 11/16 ~ 11/22</span><h4>계정 셀프 진단</h4><p>운영 루틴과 개선 목표를 설정해요.</p></li>
             <li><span class="wl">2주차 · 11/23 ~ 11/29</span><h4>기존 콘텐츠와 계정 강점 분석</h4><p>업로드 루틴을 다시 가동해요.</p></li>
@@ -648,6 +668,7 @@ footer{background:var(--soft);padding-block:48px max(48px,env(safe-area-inset-bo
           <li>5주 동안 매주 시간을 내어 함께 회고할 수 있는 분</li>
         </ul>
         <h4 style="margin-top:32px;font-size:17px">비즈니스 트랙 5주 커리큘럼</h4>
+        <span class="tlhint">← 옆으로 넘겨서 보세요 →</span>
         <ol class="tline">
           <li><span class="wl">1주차 · 11/19(목)</span><h4>OT</h4><p>OT 내용을 바탕으로 상품 정의서를 작성해 와요.</p></li>
           <li><span class="wl">2주차 · 11/28(토)</span><h4>상품 초안 구성</h4><p>내가 만들고 싶은 상품에 대한 타겟과 니즈를 파악해요.</p></li>
