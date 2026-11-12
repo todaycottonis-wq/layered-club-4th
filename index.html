@@ -146,8 +146,11 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
 .lbx{position:absolute;top:max(12px,env(safe-area-inset-top,0px));right:max(12px,env(safe-area-inset-right,0px));width:42px;height:42px;border-radius:50%;border:0;background:#fff;color:#111;font-size:22px;line-height:1;cursor:pointer}
 
 /* 후기 */
-.masonry{columns:1;column-gap:14px}
-.rv{break-inside:avoid;background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:18px;margin:0 0 14px}
+/* 모바일: 옆으로 넘기는 가로 카드 / 데스크톱: 3열 */
+.masonry{display:flex;gap:12px;overflow-x:auto;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;margin:0 -16px;padding:2px 16px 14px;scroll-padding:0 16px;scrollbar-width:none}
+.masonry::-webkit-scrollbar{display:none}
+.rv{flex:none;width:82%;max-width:340px;scroll-snap-align:start;background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:18px}
+.rvhint{display:flex;align-items:center;gap:6px;color:var(--mute);font-size:13px;margin:-6px 0 12px}
 .rv header{display:flex;align-items:center;gap:10px;margin-bottom:12px}
 .av{width:28px;height:28px;border-radius:50%;background:var(--t1);flex:none}
 .rv:nth-child(3n+2) .av{background:var(--t3)} .rv:nth-child(3n) .av{background:var(--t2)}
@@ -337,7 +340,9 @@ footer{background:var(--soft);padding-block:48px max(48px,env(safe-area-inset-bo
   .act.span2{grid-column:span 2}
   .bpts{grid-template-columns:repeat(3,minmax(0,1fr))}
   .bshots{grid-template-columns:repeat(3,minmax(0,1fr))}
-  .masonry{columns:3}
+  .masonry{display:block;columns:3;column-gap:14px;overflow:visible;margin:0;padding:0}
+  .rv{width:auto;max-width:none;break-inside:avoid;margin:0 0 14px}
+  .rvhint{display:none}
   .subs{grid-template-columns:1fr 1fr}
   .choose{grid-template-columns:repeat(2,minmax(0,1fr))}
   .pickc.two{grid-template-columns:repeat(2,minmax(0,1fr))}
@@ -472,6 +477,7 @@ footer{background:var(--soft);padding-block:48px max(48px,env(safe-area-inset-bo
   <!-- 후기 -->
   <section class="s wrap" id="reviews">
     <div class="hd"><h2>지난 LC 멤버들의 후기</h2><p class="sub">1기부터 3기까지 누적 85명 멤버들의 찐후기를 담았어요</p></div>
+    <p class="rvhint">← 옆으로 넘겨서 보세요 →</p>
     <div class="masonry">
       <article class="rv"><header><span class="av" aria-hidden="true"></span><b>3기 비기너 멤버</b></header><p>주변 분들은 "릴스 올렸네~" 정도의 간단한 평가였다면 레클에서는 다들 고봉밥으로 피드백을…! 저도 첫 릴스보다 최근의 릴스가 더 보기에도 내용도 반응도 좋아지는 게 보여서 너무 뿌듯했습니다!</p></article>
       <article class="rv"><header><span class="av" aria-hidden="true"></span><b>3기 비기너 멤버</b></header><p>제 이야기를 담은 계정을 시작하는 게 올해 목표였는데 미약하지만 1건이라도 올릴 수 있어 넘 기쁩니다..</p></article>
